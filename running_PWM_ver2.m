@@ -5,3 +5,7 @@ T_end = 0.1; %ending time for the simulation
 
 sim("PWM_2.slx");
 
+PWM = ans.unipolarPWM;
+
+Harmonics(PWM, T_end);
+
