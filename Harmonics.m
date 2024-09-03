@@ -1,5 +1,5 @@
 % x : 주파수를 분석할 데이터(1XN 크기의 row행렬)
-% T : 샘플링을 한 시간
+% f_s : 샘플링주파수
 
 % X_n : 고조파의 크기
 % phase : 고조파의 위상(-pi~pi)
@@ -9,15 +9,15 @@
 % x_out : 고조파로 재합성한 입력 데이터
 % t : x_out의 시간 축
 
-function [X_n, phase, freg, N, f_0, x_out, t] = Harmonics(x, T)
+function [X_n, phase, freq, N, f_0, x_out, t] = Harmonics(x, f_s)
 
     N = length(x); %샘플링 개수
-    f_0 = 1/T; %이산 주파수의 해상도
+    f_0 = 1/(N*(1/f_s)); %이산 주파수의 해상도  샘플링 시간 T = N*(1/f_s)
     X_fft = fft(x); %fft
     cut_off = ceil(N/2); %fft의 freg>=0 영역의 N 개수
     
     % 주파수의 범위 설정
-    freg = f_0*(0:cut_off-1); % freg>=0 영역
+    freq = f_0*(0:cut_off-1); % freg>=0 영역
 
     % 고조파계수 구하기
     X_n = X_fft(1:cut_off); %freg>=0 영역
@@ -29,7 +29,7 @@ function [X_n, phase, freg, N, f_0, x_out, t] = Harmonics(x, T)
     X_n = abs(X_n);
 
     %고조파를 이용하여 원래 데이터로 합성
-    t = linspace(0, T, N); % 샘플링한 시간
+    t = 0:1/f_s:(N-1)*(1/f_s); % 샘플링한 시간
     w_0 = 2*pi*f_0; %fundamental 각속도
     x_out = zeros(1, N);
     
@@ -55,15 +55,15 @@ function [X_n, phase, freg, N, f_0, x_out, t] = Harmonics(x, T)
     ylabel("크기");
 
     nexttile;
-    plot(freg, X_n, 'r-o');
+    stem(freq, X_n, 'r-o');
     title("고조파의 크기");
     xlabel("freq(Hz)");
     ylabel("크기");
 
     nexttile;
-    plot(freg, phase/pi, 'r-o');
+    plot(freq, phase/pi*180, 'r-o');
     title("고조파의 위상(cosine fundamental 기준)");
     xlabel("freq(Hz)");
-    ylabel("Phase/\pi");
+    ylabel("Phase(deg)");
 
 end
