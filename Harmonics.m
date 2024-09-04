@@ -54,7 +54,7 @@ function [X_n, phase, freq, N, f_0, x_out, t] = Harmonics(x, f_s)
 
     nexttile;
     plot(t, x_out, 'r');
-    title("고조파로 재합성된 Sampling Data");
+    title("cosine harmonics로 재합성된 Sampling Data");
     xlabel("t(초, s)");
     ylabel("크기");
     ylim([min(x)-0.2 max(x)+0.2])
@@ -64,13 +64,13 @@ function [X_n, phase, freq, N, f_0, x_out, t] = Harmonics(x, f_s)
     title("cosine harmonics의 크기");
     xlabel("freq(Hz)");
     ylabel("크기");
-    xlim([0 2250]);
+    xlim([0 1750]);
 
     nexttile;
     plot(freq, phase/pi*180, 'r-o');
     title("cosine harmonics의 위상");
     xlabel("freq(Hz)");
     ylabel("Phase(deg)");
-    xlim([0 2250]);
+    xlim([0 1750]);
 
 end
