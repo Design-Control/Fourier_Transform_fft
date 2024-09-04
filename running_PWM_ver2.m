@@ -1,11 +1,14 @@
 clear; clc; close all;
+addpath('PWM_simulink\');
 
-Ts = 0.000001; %sampling time for the simulation 
+Ts = 0.000001; %sampling time for the simulation
+fs = 1/Ts; %sampling frequency
 T_end = 0.1; %ending time for the simulation 
 
-sim("PWM_2.slx");
+sim("PWM.slx");
 
-PWM = ans.unipolarPWM;
+PWM = ans.simout;
+writematrix(PWM, 'PWM.txt');
 
-Harmonics(PWM, T_end);
+Harmonics(PWM, fs);
 

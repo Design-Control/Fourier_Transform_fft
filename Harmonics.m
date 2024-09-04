@@ -12,8 +12,11 @@
 function [X_n, phase, freq, N, f_0, x_out, t] = Harmonics(x, f_s)
 
     N = length(x); %샘플링 개수
-    f_0 = 1/(N*(1/f_s)); %이산 주파수의 해상도  샘플링 시간 T = N*(1/f_s)
+    f_0 = f_s/N; %이산 주파수의 해상도 / 전체 샘플링 시간 T = N*(1/f_s)
+
+    %fft
     X_fft = fft(x); %fft
+    
     cut_off = ceil(N/2); %fft의 freg>=0 영역의 N 개수
     
     % 주파수의 범위 설정
@@ -47,23 +50,27 @@ function [X_n, phase, freq, N, f_0, x_out, t] = Harmonics(x, f_s)
     title("Sampling Data");
     xlabel("t(초, s)");
     ylabel("크기");
+    ylim([min(x)-0.2 max(x)+0.2])
 
     nexttile;
     plot(t, x_out, 'r');
     title("고조파로 재합성된 Sampling Data");
     xlabel("t(초, s)");
     ylabel("크기");
+    ylim([min(x)-0.2 max(x)+0.2])
 
     nexttile;
     stem(freq, X_n, 'r-o');
-    title("고조파의 크기");
+    title("cosine harmonics의 크기");
     xlabel("freq(Hz)");
     ylabel("크기");
+    xlim([0 2250]);
 
     nexttile;
     plot(freq, phase/pi*180, 'r-o');
-    title("고조파의 위상(cosine fundamental 기준)");
+    title("cosine harmonics의 위상");
     xlabel("freq(Hz)");
     ylabel("Phase(deg)");
+    xlim([0 2250]);
 
 end
